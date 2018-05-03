@@ -20,7 +20,7 @@ let downPressed = false;
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
-function keyDownHandler (e) {
+function keyDownHandler (e)  {
     if(e.keyCode === 40) {
         upPressed = true;
     }
@@ -93,7 +93,7 @@ const draw = () => {
 
     //Попадание мяча в ворота компьютера
     if(x - ballRadius < 0) {
-        if(y - ballRadius > paddleCompY && y < paddleCompY+paddleHeight) {
+        if(y - ballRadius > paddleCompY && y + ballRadius < paddleCompY+paddleHeight) {
             dx = -dx;
             let deltaY = y - (paddleCompY + paddleHeight / 2);
             dy = deltaY * 0.3;
@@ -110,7 +110,7 @@ const draw = () => {
 
     //Попадание мяча в ворота игрока
     if(x + ballRadius > canvas.width) {
-        if(y > paddlePlayerY && y < paddlePlayerY+paddleHeight) {
+        if(y - ballRadius > paddlePlayerY && y + ballRadius < paddlePlayerY+paddleHeight) {
             dx = -dx;
             deltaY = y - (paddlePlayerY + paddleHeight / 2);
             dy = deltaY * 0.3;
