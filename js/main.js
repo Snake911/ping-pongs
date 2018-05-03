@@ -86,7 +86,6 @@ const draw = () => {
     ctx.fillText(scoreComp, canvas.width / 2 - 50, 50);
     drawCompPaddlle();
     ctx.fillText(scorePlayer, canvas.width / 2 + 50, 50);
-    ctx.fillText(paddlePlayerY, 30, 100);
 
     if((y - ballRadius < 0 && dy < 0)||(y + ballRadius > canvas.height && dy > 0)) {
         dy = -dy;
