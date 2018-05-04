@@ -10,17 +10,17 @@ let py = 6;
 let paddleHeight = 80;
 let paddleWidth = 10;
 let paddlePlayerX = canvas.width-paddleWidth;
-let paddlePlayerY = (canvas.height-paddleHeight)/2;
+let paddlePlayerY = paddleCompY = (canvas.height-paddleHeight)/2;
 let paddleCompX = 0;
-let paddleCompY = (canvas.height-paddleHeight)/2;
 let scorePlayer = scoreComp = 0;
 let upPressed = false;
 let downPressed = false;
 
+
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
-function keyDownHandler (e)  {
+function keyDownHandler (e) {
     if(e.keyCode === 40) {
         upPressed = true;
     }
@@ -72,10 +72,12 @@ const drawLine = () => {
 }
 
 const reset = () => {
+    alert(`Счет ${scoreComp} : ${scorePlayer}. Продолжаем!`);
     x = canvas.width / 2;
     y = canvas.height / 2;
     dx = -dx;
     dy = 3;
+    paddlePlayerY = paddleCompY =  (canvas.height-paddleHeight)/2;
 }
 
 const draw = () => {
@@ -93,35 +95,39 @@ const draw = () => {
 
     //Попадание мяча в ворота компьютера
     if(x - ballRadius < 0) {
-        if(y - ballRadius > paddleCompY && y + ballRadius < paddleCompY+paddleHeight) {
+        if(y + ballRadius > paddleCompY && (y + ballRadius * 2) < paddleCompY+paddleHeight) {
             dx = -dx;
             let deltaY = y - (paddleCompY + paddleHeight / 2);
             dy = deltaY * 0.3;
-        } else {
+        } 
+        else {
             scoreComp++;
             if(scoreComp === 5) {
                 alert(`Поздравляем! Вы выиграли со счетом ${scoreComp} : ${scorePlayer}`);
                 document.location.reload();
             } 
-                alert(`Счет ${scoreComp} : ${scorePlayer}. Продолжаем!`);
+            else if(scoreComp < 5) {
                 reset();
+            }
         }
     }
 
     //Попадание мяча в ворота игрока
     if(x + ballRadius > canvas.width) {
-        if(y - ballRadius > paddlePlayerY && y + ballRadius < paddlePlayerY+paddleHeight) {
+        if(y + ballRadius > paddlePlayerY && y + (ballRadius * 2) < paddlePlayerY+paddleHeight) {
             dx = -dx;
             deltaY = y - (paddlePlayerY + paddleHeight / 2);
             dy = deltaY * 0.3;
-        } else {
+        } 
+        else {
             scorePlayer++;
-            if(scorePlayer === 5){
+            if(scorePlayer === 5) {
                 alert(`Вы проиграли со счетом ${scoreComp} : ${scorePlayer}`);
                 document.location.reload();
+            } 
+            else if(scorePlayer < 5) {
+                reset();
             }
-            alert(`Счет ${scoreComp} : ${scorePlayer}. Продолжаем!`);
-            reset();
         }
     }
 
