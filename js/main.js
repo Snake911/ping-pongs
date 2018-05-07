@@ -1,12 +1,12 @@
-let canvas = document.getElementById("myCanvas");
-let ctx = canvas.getContext("2d");
-ctx.font = '28px Verdana bold';
 const ballRadius = 10;
 const py = 6;
 const paddleHeight = 80;
 const paddleWidth = 10;
 const UP_KEY = 40;
 const DOWN_KEY = 38;
+let canvas = document.getElementById("myCanvas");
+let ctx = canvas.getContext("2d");
+ctx.font = '28px Verdana bold';
 let x = canvas.width/2;
 let y = canvas.height/2;
 let dx = -2;
@@ -93,8 +93,8 @@ const reset = () => {
     paddlePlayerY = paddleCompY = (downLimit)/2;
 }
 
-const draw = () => { 
-    let upBall = y - ballRadius;
+const draw = () => {
+     let upBall = y - ballRadius;
     let downBall = y + ballRadius;
     let leftBall = x - ballRadius;
     let rightBall = x + ballRadius;
@@ -102,6 +102,8 @@ const draw = () => {
     let sizePaddleP = paddlePlayerY + paddleHeight;
     let centerPaddleC = paddleCompY + (paddleHeight / 2);
     let centerPaddleP = paddlePlayerY + (paddleHeight / 2);
+    const centerPaddleCheckDown = centerPaddleC < y || centerPaddleC < y + 10; 
+    const centerPaddleCheckUp = centerPaddleC > y || centerPaddleC > y - 10;
     
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawLine();
@@ -119,7 +121,7 @@ const draw = () => {
     if(leftBall < 0) {
         if(downBall > paddleCompY && upBall < sizePaddleC) {
             dx = -dx;
-            let deltaY = y - (centerPaddleC);
+            const deltaY = y - (centerPaddleC);
             dy = deltaY * 0.3;
         } 
         else {
@@ -132,7 +134,7 @@ const draw = () => {
     if(rightBall > canvas.width) {
         if(downBall > paddlePlayerY && upBall < sizePaddleP) {
             dx = -dx;
-            deltaY = y - (centerPaddleP);
+            const deltaY = y - (centerPaddleP);
             dy = deltaY * 0.3;
         } 
         else {
@@ -142,10 +144,10 @@ const draw = () => {
     }    
 
     //Игра компьютера
-    if((centerPaddleC < y || centerPaddleC < y + 10) && paddleCompY < downLimit) {
+    if(centerPaddleCheckDown && paddleCompY < downLimit) {
         paddleCompY += py;
     }
-    if((centerPaddleC > y || centerPaddleC > y - 10) && paddleCompY > 0) {
+    if(centerPaddleCheckUp && paddleCompY > 0) {
         paddleCompY -= py;
     }
     
