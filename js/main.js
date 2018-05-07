@@ -1,41 +1,43 @@
 let canvas = document.getElementById("myCanvas");
 let ctx = canvas.getContext("2d");
-ctx.font = '20px Verdana';
-let ballRadius = 10;
+ctx.font = '28px Verdana bold';
+const ballRadius = 10;
+const py = 6;
+const paddleHeight = 80;
+const paddleWidth = 10;
+const UP_KEY = 40;
+const DOWN_KEY = 38;
 let x = canvas.width/2;
 let y = canvas.height/2;
 let dx = -2;
 let dy = -2;
-let py = 6;
-let paddleHeight = 80;
-let paddleWidth = 10;
 let paddlePlayerX = canvas.width-paddleWidth;
 let paddlePlayerY = paddleCompY = (canvas.height-paddleHeight)/2;
 let paddleCompX = 0;
+let downLimit = canvas.height - paddleHeight;
 let scorePlayer = scoreComp = 0;
 let upPressed = false;
 let downPressed = false;
 
-
-document.addEventListener("keydown", keyDownHandler, false);
-document.addEventListener("keyup", keyUpHandler, false);
-
-function keyDownHandler (e) {
-    if(e.keyCode === 40) {
+const keyDownHandler = (e) => {
+    if(e.keyCode === UP_KEY) {
         upPressed = true;
     }
-    else if(e.keyCode === 38) {
+    else if(e.keyCode === DOWN_KEY) {
         downPressed = true;
     }
 }
-function keyUpHandler (e) {
-    if(e.keyCode === 40) {
+const keyUpHandler = (e) => {
+    if(e.keyCode === UP_KEY) {
         upPressed = false;
     }
-    else if(e.keyCode === 38) {
+    else if(e.keyCode === DOWN_KEY) {
         downPressed = false;
     }
 }
+
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
 
 const drawBall = () => {
     ctx.beginPath();
@@ -54,7 +56,7 @@ const drawPaddle = () => {
 }
 
 const drawCompPaddlle = () => {
-	ctx.beginPath();
+    ctx.beginPath();
     ctx.rect(paddleCompX, paddleCompY, paddleWidth, paddleHeight);
     ctx.fillStyle = "#eee657";
     ctx.fill();
@@ -72,15 +74,35 @@ const drawLine = () => {
 }
 
 const reset = () => {
-    alert(`Счет ${scoreComp} : ${scorePlayer}. Продолжаем!`);
+    if(scoreComp === 5) {
+        alert(`Поздравляем! Вы выиграли со счетом ${scoreComp} : ${scorePlayer}`);
+        document.location.reload();
+    }
+    else if(scorePlayer === 5){
+        alert(`Вы проиграли со счетом ${scoreComp} : ${scorePlayer}`);
+        document.location.reload();
+    }
+    else {
+        alert(`Счет ${scoreComp} : ${scorePlayer}. Продолжаем!`);
+    }
+
     x = canvas.width / 2;
     y = canvas.height / 2;
     dx = -dx;
     dy = 3;
-    paddlePlayerY = paddleCompY =  (canvas.height-paddleHeight)/2;
+    paddlePlayerY = paddleCompY = (downLimit)/2;
 }
 
-const draw = () => {
+const draw = () => { 
+    let upBall = y - ballRadius;
+    let downBall = y + ballRadius;
+    let leftBall = x - ballRadius;
+    let rightBall = x + ballRadius;
+    let sizePaddleC = paddleCompY + paddleHeight;
+    let sizePaddleP = paddlePlayerY + paddleHeight;
+    let centerPaddleC = paddleCompY + (paddleHeight / 2);
+    let centerPaddleP = paddlePlayerY + (paddleHeight / 2);
+    
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawLine();
     drawBall();
@@ -88,58 +110,46 @@ const draw = () => {
     ctx.fillText(scoreComp, canvas.width / 2 - 50, 50);
     drawCompPaddlle();
     ctx.fillText(scorePlayer, canvas.width / 2 + 50, 50);
-
-    if((y - ballRadius < 0 && dy < 0)||(y + ballRadius > canvas.height && dy > 0)) {
+    
+    if((upBall < 0 && dy < 0)||(downBall > canvas.height && dy > 0)) {
         dy = -dy;
     }
 
     //Попадание мяча в ворота компьютера
-    if(x - ballRadius < 0) {
-        if(y + ballRadius > paddleCompY && (y + ballRadius * 2) < paddleCompY+paddleHeight) {
+    if(leftBall < 0) {
+        if(downBall > paddleCompY && upBall < sizePaddleC) {
             dx = -dx;
-            let deltaY = y - (paddleCompY + paddleHeight / 2);
+            let deltaY = y - (centerPaddleC);
             dy = deltaY * 0.3;
         } 
         else {
             scoreComp++;
-            if(scoreComp === 5) {
-                alert(`Поздравляем! Вы выиграли со счетом ${scoreComp} : ${scorePlayer}`);
-                document.location.reload();
-            } 
-            else if(scoreComp < 5) {
-                reset();
-            }
+            reset();            
         }
     }
 
     //Попадание мяча в ворота игрока
-    if(x + ballRadius > canvas.width) {
-        if(y + ballRadius > paddlePlayerY && y + (ballRadius * 2) < paddlePlayerY+paddleHeight) {
+    if(rightBall > canvas.width) {
+        if(downBall > paddlePlayerY && upBall < sizePaddleP) {
             dx = -dx;
-            deltaY = y - (paddlePlayerY + paddleHeight / 2);
+            deltaY = y - (centerPaddleP);
             dy = deltaY * 0.3;
         } 
         else {
             scorePlayer++;
-            if(scorePlayer === 5) {
-                alert(`Вы проиграли со счетом ${scoreComp} : ${scorePlayer}`);
-                document.location.reload();
-            } 
-            else if(scorePlayer < 5) {
-                reset();
-            }
+            reset();
         }
-    }
+    }    
 
     //Игра компьютера
-    if((paddleCompY + paddleHeight / 2 < y || paddleCompY + paddleHeight / 2 < y + 10) && paddleCompY < canvas.height - paddleHeight) {
+    if((centerPaddleC < y || centerPaddleC < y + 10) && paddleCompY < downLimit) {
         paddleCompY += py;
     }
-    if((paddleCompY + paddleHeight / 2 > y || paddleCompY + paddleHeight / 2 > y - 10) && paddleCompY > 0) {
+    if((centerPaddleC > y || centerPaddleC > y - 10) && paddleCompY > 0) {
         paddleCompY -= py;
     }
     
-    if(upPressed && paddlePlayerY < canvas.height-paddleHeight) {
+    if(upPressed && paddlePlayerY < downLimit) {
         paddlePlayerY += py;
     }
     else if(downPressed && paddlePlayerY > 0) {
