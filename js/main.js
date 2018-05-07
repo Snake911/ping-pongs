@@ -22,9 +22,11 @@ let downPressed = false;
 const keyDownHandler = (e) => {
     if(e.keyCode === UP_KEY) {
         upPressed = true;
+	downPressed = false;    
     }
     else if(e.keyCode === DOWN_KEY) {
         downPressed = true;
+	upPressed = false;
     }
 }
 const keyUpHandler = (e) => {
