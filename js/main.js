@@ -122,6 +122,7 @@ const draw = () => {
     drawCompPaddlle();
     ctx.fillStyle = "#333";
     ctx.fillText(scorePlayer, canvas.width / 2 + 30, 50);
+   
     
     if((upBall < 0 && dy < 0)||(downBall > canvas.height && dy > 0)) {
         dy = -dy;
