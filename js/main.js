@@ -6,7 +6,7 @@ const UP_KEY = 40;
 const DOWN_KEY = 38;
 let canvas = document.getElementById("myCanvas");
 let ctx = canvas.getContext("2d");
-ctx.font = '28px Verdana bold';
+ctx.font = '40px Verdana bold';
 let x = canvas.width/2;
 let y = canvas.height/2;
 let dx = -2;
@@ -54,6 +54,9 @@ const drawPaddle = () => {
     ctx.rect(paddlePlayerX, paddlePlayerY, paddleWidth, paddleHeight);
     ctx.fillStyle = "#2c82c9";
     ctx.fill();
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 1;
+    ctx.stroke()
     ctx.closePath();
 }
 
@@ -62,6 +65,9 @@ const drawCompPaddlle = () => {
     ctx.rect(paddleCompX, paddleCompY, paddleWidth, paddleHeight);
     ctx.fillStyle = "#eee657";
     ctx.fill();
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 1;
+    ctx.stroke()
     ctx.closePath();
 }
 
@@ -70,7 +76,7 @@ const drawLine = () => {
 	ctx.moveTo((canvas.width)/2, 0);
 	ctx.lineTo((canvas.width)/2, canvas.height);
 	ctx.lineWidth = 3;
-	ctx.strokeStyle = "#fee";
+	ctx.strokeStyle = "#666";
 	ctx.stroke();
 
 }
@@ -96,7 +102,7 @@ const reset = () => {
 }
 
 const draw = () => {
-     let upBall = y - ballRadius;
+    let upBall = y - ballRadius;
     let downBall = y + ballRadius;
     let leftBall = x - ballRadius;
     let rightBall = x + ballRadius;
@@ -111,9 +117,11 @@ const draw = () => {
     drawLine();
     drawBall();
     drawPaddle();
+    ctx.fillStyle = "#333";
     ctx.fillText(scoreComp, canvas.width / 2 - 50, 50);
     drawCompPaddlle();
-    ctx.fillText(scorePlayer, canvas.width / 2 + 50, 50);
+    ctx.fillStyle = "#333";
+    ctx.fillText(scorePlayer, canvas.width / 2 + 30, 50);
     
     if((upBall < 0 && dy < 0)||(downBall > canvas.height && dy > 0)) {
         dy = -dy;
