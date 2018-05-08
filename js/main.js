@@ -96,7 +96,7 @@ const reset = () => {
 }
 
 const draw = () => {
-     let upBall = y - ballRadius;
+    let upBall = y - ballRadius;
     let downBall = y + ballRadius;
     let leftBall = x - ballRadius;
     let rightBall = x + ballRadius;
@@ -111,6 +111,7 @@ const draw = () => {
     drawLine();
     drawBall();
     drawPaddle();
+    ctx.strokeStyle = "#F00";
     ctx.fillText(scoreComp, canvas.width / 2 - 50, 50);
     drawCompPaddlle();
     ctx.fillText(scorePlayer, canvas.width / 2 + 50, 50);
