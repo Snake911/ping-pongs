@@ -70,7 +70,7 @@ const drawLine = () => {
 	ctx.moveTo((canvas.width)/2, 0);
 	ctx.lineTo((canvas.width)/2, canvas.height);
 	ctx.lineWidth = 3;
-	ctx.strokeStyle = "#785edd";
+	ctx.strokeStyle = "#fee";
 	ctx.stroke();
 
 }
